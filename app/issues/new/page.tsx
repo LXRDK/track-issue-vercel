@@ -2,15 +2,41 @@
 import { Button, TextArea, TextField } from "@radix-ui/themes";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
-
+import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+interface IssueForm {
+  title: string;
+  description: string;
+}
 const NewIssuePage = () => {
+  const { register, control, handleSubmit } = useForm<IssueForm>();
+  const router = useRouter();
+
   return (
-    <div className="max-w-lg space-y-3">
+    <form
+      className="max-w-lg space-y-3"
+      onSubmit={handleSubmit(async (data) => {
+        axios.post("/api/issues", data);
+        router.push("/");
+      })}
+    >
       <TextField.Root>
-        <TextField.Input placeholder="Title" className="" />
+        <TextField.Input
+          placeholder="Title"
+          className=""
+          {...register("title")}
+        />
       </TextField.Root>
-      <SimpleMDE placeholder="Description" />;<Button>Submit</Button>
-    </div>
+      <Controller
+        name="description"
+        control={control}
+        render={({ field }) => (
+          <SimpleMDE placeholder="Description" {...field} />
+        )}
+      />
+      <Button>Submit</Button>
+    </form>
   );
 };
 
