@@ -1,10 +1,9 @@
-import { Skeleton } from "@radix-ui/themes";
-import React from "react";
+import Spinner from "@/app/components/Spinner";
 
 const LoadingNewIssuelPage = () => {
   return (
-    <div>
-      <Skeleton className="min-h-screen" />
+    <div className="w-32 md:w-52 min-h-32 flex items-center justify-center">
+      <Spinner />
     </div>
   );
 };
