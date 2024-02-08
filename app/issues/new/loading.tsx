@@ -1,10 +1,23 @@
-import Spinner from "@/app/components/Spinner";
+import { Box, Card, Flex } from "@radix-ui/themes";
+
+import { Skeleton } from "../../components/";
 
 const LoadingNewIssuelPage = () => {
   return (
-    <div className="w-32 md:w-52 min-h-32 flex items-center justify-center">
-      <Spinner />
-    </div>
+    <Box className="max-w-lg">
+      <Skeleton />
+
+      <Card className="prose" mt="4">
+        <Flex className="max-w-lg gap-4">
+          <Skeleton width={"5rem"} />
+          <Skeleton width={"5rem"} />
+          <Skeleton width={"5rem"} />
+          <Skeleton width={"5rem"} />
+          <Skeleton width={"5rem"} />
+        </Flex>
+        <Skeleton count={3} />
+      </Card>
+    </Box>
   );
 };
 
