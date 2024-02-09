@@ -25,16 +25,17 @@ import { createIssueSchema } from "@/app/ValidationSchemas";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
+import { Issue } from "@prisma/client";
 
-type IssueForm = z.infer<typeof createIssueSchema>;
-const IssueForm = () => {
+type IssueFormData = z.infer<typeof createIssueSchema>;
+const IssueForm = ({ issue }: { issue?: Issue }) => {
   const [isSubmitting, setSubmitting] = useState(false);
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IssueForm>({
+  } = useForm<IssueFormData>({
     resolver: zodResolver(createIssueSchema),
   });
   const router = useRouter();
@@ -64,12 +65,14 @@ const IssueForm = () => {
             placeholder="Title"
             className=""
             {...register("title")}
+            defaultValue={issue?.title}
           />
         </TextField.Root>
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
+          defaultValue={issue?.description}
           render={({ field }) => (
             <SimpleMDE placeholder="Description" {...field} />
           )}
