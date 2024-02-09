@@ -1,31 +1,23 @@
 "use client";
 
-import React from "react";
-// const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-//   ssr: false,
-// });
-import SimpleMDE from "react-simplemde-editor";
-import {
-  Button,
-  Callout,
-  CalloutRoot,
-  Text,
-  TextArea,
-  TextField,
-} from "@radix-ui/themes";
-import "easymde/dist/easymde.min.css";
-import { useForm, Controller } from "react-hook-form";
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
+// import SimpleMDE from "react-simplemde-editor";
+import { Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
+import "easymde/dist/easymde.min.css";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import dynamic from "next/dynamic";
+import { Controller, useForm } from "react-hook-form";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { IssueSchema } from "@/app/ValidationSchemas";
-import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
+import { z } from "zod";
 
 type IssueFormData = z.infer<typeof IssueSchema>;
 const IssueForm = ({ issue }: { issue?: Issue }) => {
@@ -43,12 +35,15 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   const onSubmit = async (data: { title: string; description: string }) => {
     try {
       setSubmitting(true);
-      await axios.post("/api/issues", data);
+      console.log(data);
+      if (issue) await axios.patch(`/api/issues/${issue.id}`, data);
+      else await axios.post("/api/issues", data);
 
       router.push("/issues");
     } catch (error) {
       setSubmitting(false);
       setError("un expected");
+      // console.log(error);
     }
   };
 
