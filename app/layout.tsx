@@ -7,6 +7,7 @@ import NavBar from "./NavBar";
 import NextUiProvider from "./components/NextUiProvider";
 import "./globals.css";
 import "./theme.config.css";
+import AuthProvider from "./auth/provider";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,15 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <NextUiProvider>
-          <Theme accentColor="cyan" grayColor="gray">
-            <NavBar />
-            <main className="p-5">
-              <Container>{children}</Container>
-            </main>
-            {/* <ThemePanel /> */}
-          </Theme>
-        </NextUiProvider>
+        <AuthProvider>
+          <NextUiProvider>
+            <Theme accentColor="cyan" grayColor="gray">
+              <NavBar />
+              <main className="p-5">
+                <Container>{children}</Container>
+              </main>
+              {/* <ThemePanel /> */}
+            </Theme>
+          </NextUiProvider>
+        </AuthProvider>
       </body>
     </html>
   );
