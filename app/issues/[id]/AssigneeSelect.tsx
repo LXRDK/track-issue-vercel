@@ -1,15 +1,18 @@
 "use client";
-import { Skeleton } from "@/app/components";
+import { Skeleton, Spinner } from "@/app/components";
 import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const { data: users, error, isLoading } = useUsers();
+  const [isUpdatig, setUpdating] = useState(false);
   if (isLoading) return <Skeleton width={"10rem"} />;
   if (error) return null;
   const assignIssue = async (userId: string) => {
+    setUpdating(true);
     try {
       await axios.patch("/api/issues/" + issue.id, {
         assignedToUserId: userId !== "Unassigned" ? userId : null,
@@ -24,6 +27,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       console.log(err);
       toast.error("Changes cant be made");
     }
+    setUpdating(false);
   };
   return (
     <>
@@ -33,6 +37,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
           issue.assignedToUserId ? issue.assignedToUserId : "Unassigned"
         }
         onValueChange={assignIssue}
+        disabled={isUpdatig}
       >
         <Select.Trigger placeholder="Unassigned"></Select.Trigger>
         <Select.Content>
@@ -41,7 +46,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
             <Select.Item value={"Unassigned"}>Unassigned</Select.Item>
             {users?.map((user) => (
               <Select.Item key={user.id} value={user.id}>
-                {user.name}
+                {isUpdatig ? <Skeleton width={"4rem"} /> : user.name}
               </Select.Item>
             ))}
           </Select.Group>
