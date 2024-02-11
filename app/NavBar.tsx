@@ -13,6 +13,7 @@ import {
   Flex,
   Text,
 } from "@radix-ui/themes";
+import { Skeleton } from "@/app/components";
 const NavBar = () => {
   return (
     <nav className="border-b mb-5 px-5 py-3 ">
@@ -32,7 +33,10 @@ const NavBar = () => {
 };
 const AuthStaus = () => {
   const { status, data: session } = useSession();
-  if (status === "loading") return;
+  if (status === "loading")
+    return (
+      <Skeleton width={"3rem"} baseColor="gray" className="rounded-full" />
+    );
   if (status === "unauthenticated")
     return (
       <Link href="/api/auth/signin" className="nav-link">
@@ -57,7 +61,9 @@ const AuthStaus = () => {
             <Text size={"2"}>{session!.user!.email}</Text>
           </DropdownMenu.Label>
           <DropdownMenu.Item>
-            <Link href="/api/auth/signout">Log out</Link>
+            <Link href="/api/auth/signout" className="w-full">
+              Log out
+            </Link>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
