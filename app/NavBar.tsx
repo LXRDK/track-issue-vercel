@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   DropdownMenu,
   Flex,
@@ -49,7 +50,7 @@ const AuthStaus = () => {
         <DropdownMenu.Trigger>
           <Avatar
             src={session!.user!.image!}
-            fallback="?"
+            fallback={<FallBackUi />}
             size={"3"}
             radius="full"
             className="cursor-pointer "
@@ -97,3 +98,11 @@ const NavLinks = () => {
   );
 };
 export default NavBar;
+
+const FallBackUi = () => {
+  return (
+    <Link href="/api/auth/signin" color="ruby">
+      <Button color="ruby">Sign in again</Button>
+    </Link>
+  );
+};

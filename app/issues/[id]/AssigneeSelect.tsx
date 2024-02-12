@@ -4,9 +4,11 @@ import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
+  const router = useRouter();
   const { data: users, error, isLoading } = useUsers();
   const [isUpdatig, setUpdating] = useState(false);
   if (isLoading) return <Skeleton width={"10rem"} />;
@@ -28,6 +30,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       toast.error("Changes cant be made");
     }
     setUpdating(false);
+    router.refresh();
   };
   return (
     <>
