@@ -4,7 +4,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
 });
 // import SimpleMDE from "react-simplemde-editor";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Button, Callout, Select, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -16,11 +16,12 @@ import { IssueSchema } from "@/app/ValidationSchemas";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Issue } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
 import { z } from "zod";
 
 type IssueFormData = z.infer<typeof IssueSchema>;
 const IssueForm = ({ issue }: { issue?: Issue }) => {
+  const [stat, setStat] = useState<Status | string>();
   const [isSubmitting, setSubmitting] = useState(false);
   const {
     register,
@@ -32,21 +33,31 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   });
   const router = useRouter();
   const [error, setError] = useState("");
-  const onSubmit = async (data: { title: string; description: string }) => {
+  const onSubmit = async (data: {
+    title: string;
+    description: string;
+    status?: string;
+  }) => {
+    const dataM = { ...data, status: stat };
+
     try {
       setSubmitting(true);
-      console.log(data);
-      if (issue) await axios.patch(`/api/issues/${issue.id}`, data);
+
+      if (issue) await axios.patch(`/api/issues/${issue.id}`, dataM);
       else await axios.post("/api/issues", data);
 
-      router.push("/issues");
+      router.push(`/issues`);
       router.refresh();
     } catch (error) {
       setSubmitting(false);
       setError("un expected");
-      // console.log(error);
     }
   };
+  const statuses: { label: string; value?: Status }[] = [
+    { label: "Open", value: "OPEN" },
+    { label: "Closed", value: "CLOSED" },
+    { label: "In progress", value: "IN_PROGRESS" },
+  ];
 
   return (
     <div className="max-w-lg">
@@ -73,12 +84,32 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
+        <div className="flex flex-col space-y-4">
+          {issue && (
+            <Select.Root
+              defaultValue={issue?.status}
+              onValueChange={(status) => {
+                setStat(status);
+              }}
+            >
+              <Select.Trigger className="w-40"></Select.Trigger>
+              <Select.Content>
+                {statuses.map((status) => (
+                  <Select.Item key={status.label} value={status.value || ""}>
+                    {" "}
+                    {status.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          )}
 
-        <ErrorMessage>{errors.description?.message}</ErrorMessage>
+          <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button disabled={isSubmitting}>
-          {!isSubmitting ? "Submit" : <Spinner />}
-        </Button>
+          <Button disabled={isSubmitting}>
+            {!isSubmitting ? "Submit" : <Spinner />}
+          </Button>
+        </div>
       </form>
     </div>
   );

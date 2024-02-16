@@ -4,7 +4,7 @@ import { Link as RadixLink } from "@radix-ui/themes";
 const Link = ({ href, children }: { href: string; children: string }) => {
   return (
     <NextLink href={href} passHref legacyBehavior>
-      <RadixLink>{children}</RadixLink>
+      <RadixLink className="font-bold hover:text-black">{children}</RadixLink>
     </NextLink>
   );
 };

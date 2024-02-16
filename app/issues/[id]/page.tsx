@@ -12,6 +12,8 @@ import AssigneeSelect from "./AssigneeSelect";
 
 const IssueDetailPage = async ({ params }: { params: { id: string } }) => {
   const session = await getServerSession(authOptions);
+  console.log(params.id);
+
   const issue = await prisma.issue.findUnique({
     where: {
       id: parseInt(params.id),

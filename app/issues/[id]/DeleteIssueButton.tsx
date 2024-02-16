@@ -24,16 +24,16 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
     }
   };
   return (
-    <div>
+    <>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
           <Button
             disabled={isDeleting}
-            color="red"
-            className="flex items-center justify-center w-full gap-2"
+            color="tomato"
+            variant="solid"
+            className="flex items-center justify-center w-full gap-2 bg-red-600 cursor-pointer"
           >
-            <TrashIcon />{" "}
-            <span className="whitespace-nowrap">Delete Issue</span>
+            <TrashIcon /> <span className=" ">Delete Issue</span>
             {isDeleting && <Spinner />}
           </Button>
         </AlertDialog.Trigger>
@@ -41,19 +41,28 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
           <AlertDialog.Title>Delete Issue</AlertDialog.Title>
           <AlertDialog.Description className="flex flex-col" size="2">
             <span>Are you sure to delete this issue?</span>
-            <span className="text-red-600/50 drop-shadow-md">
+            <span className="text-red-600 drop-shadow-md">
               You can not undo this !
             </span>
           </AlertDialog.Description>
 
           <Flex gap="3" mt="4" justify="end">
             <AlertDialog.Cancel>
-              <Button variant="soft" color="gray">
+              <Button
+                variant="soft"
+                color="gray"
+                className="text-black bg-gray-300"
+              >
                 Cancel
               </Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action>
-              <Button variant="solid" color="red" onClick={deleteIssue}>
+              <Button
+                variant="solid"
+                color="red"
+                onClick={deleteIssue}
+                className="cursor-pointer bg-red-600 text-white font-bold"
+              >
                 Delete
               </Button>
             </AlertDialog.Action>
@@ -76,7 +85,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
           </Button>
         </AlertDialog.Content>
       </AlertDialog.Root>
-    </div>
+    </>
   );
 };
 

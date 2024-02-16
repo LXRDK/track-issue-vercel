@@ -4,8 +4,44 @@ import { Table } from "@radix-ui/themes";
 import IssueStatusBadge from "../components/IssueStatusBadge";
 import Link from "../components/Link";
 import IssueActions from "./IssueActions";
-const Issues = async () => {
-  const issues = await prisma.issue.findMany();
+import { Issue, Status } from "@prisma/client";
+
+interface Props {
+  searchParams: { status: Status };
+}
+
+const Issues = async ({ searchParams }: Props) => {
+  const columns: { label: string; value: keyof Issue; className?: string }[] = [
+    {
+      label: "Issue",
+      value: "title",
+    },
+    {
+      label: "Status",
+      value: "status",
+      className: "hidden md:table-cell",
+    },
+    {
+      label: "Created",
+      value: "createdAt",
+      className: "hidden md:table-cell w-fit",
+    },
+    {
+      label: "Updated ",
+      value: "updatedAt",
+      className: "hidden md:table-cell",
+    },
+  ];
+  const statuses = Object.values(Status);
+
+  const status = statuses.includes(searchParams.status)
+    ? searchParams.status
+    : undefined;
+  const issues = await prisma.issue.findMany({
+    where: {
+      status,
+    },
+  });
 
   return (
     <div>
@@ -13,19 +49,21 @@ const Issues = async () => {
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Created
-            </Table.ColumnHeaderCell>
+            {columns.map((col) => (
+              <Table.ColumnHeaderCell
+                key={col.label}
+                className={col.className}
+                justify={"center"}
+              >
+                {col.label}
+              </Table.ColumnHeaderCell>
+            ))}
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {issues.map((issue) => (
             <Table.Row key={issue.id}>
-              <Table.Cell>
+              <Table.Cell justify={"center"} width={"10rem"} className="">
                 <Link
                   // color="violet"
                   // className="font-bold"
@@ -38,11 +76,21 @@ const Issues = async () => {
                   <IssueStatusBadge status={issue.status} />
                 </div>
               </Table.Cell>
-              <Table.Cell className="hidden md:table-cell">
+              <Table.Cell
+                className="hidden md:table-cell"
+                justify={"center"}
+                width={"10rem"}
+              >
                 <IssueStatusBadge status={issue.status} />
               </Table.Cell>
-              <Table.Cell className="hidden md:table-cell">
+              <Table.Cell
+                width={"10rem"}
+                className="hidden md:table-cell w-fit"
+              >
                 {issue.createdAt.toDateString()}
+              </Table.Cell>
+              <Table.Cell className="hidden md:table-cell" width={"10rem"}>
+                {issue.updatedAt.toDateString()}
               </Table.Cell>
             </Table.Row>
           ))}
