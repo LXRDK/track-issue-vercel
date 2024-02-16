@@ -4,18 +4,14 @@ import { Table } from "@radix-ui/themes";
 import IssueStatusBadge from "../components/IssueStatusBadge";
 import Link from "../components/Link";
 import IssueActions from "./IssueActions";
-<<<<<<< HEAD
+
 import { Issue, Status } from "@prisma/client";
-=======
-import { Status } from "@prisma/client";
->>>>>>> bacec75b4928611751d21452b640384c31a62123
 
 interface Props {
   searchParams: { status: Status };
 }
 
 const Issues = async ({ searchParams }: Props) => {
-<<<<<<< HEAD
   const columns: { label: string; value: keyof Issue; className?: string }[] = [
     {
       label: "Issue",
@@ -37,13 +33,9 @@ const Issues = async ({ searchParams }: Props) => {
       className: "hidden md:table-cell",
     },
   ];
+
   const statuses = Object.values(Status);
 
-=======
-  console.log(searchParams.status);
-  const statuses = Object.values(Status);
-  console.log(statuses);
->>>>>>> bacec75b4928611751d21452b640384c31a62123
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;

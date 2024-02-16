@@ -26,7 +26,6 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
         toast.success("unassigned");
       }
     } catch (err) {
-      console.log(err);
       toast.error("Changes cant be made");
     }
     setUpdating(false);
