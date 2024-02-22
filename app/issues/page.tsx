@@ -4,11 +4,12 @@ import { Table } from "@radix-ui/themes";
 import IssueStatusBadge from "../components/IssueStatusBadge";
 import Link from "../components/Link";
 import IssueActions from "./IssueActions";
-
+import NextLink from "next/link";
 import { Issue, Status } from "@prisma/client";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 
 interface Props {
-  searchParams: { status: Status };
+  searchParams: { status: Status; orderBy: keyof Issue };
 }
 
 const Issues = async ({ searchParams }: Props) => {
@@ -57,7 +58,16 @@ const Issues = async ({ searchParams }: Props) => {
                 className={col.className}
                 justify={"center"}
               >
-                {col.label}
+                <NextLink
+                  href={{
+                    query: { ...searchParams, orderBy: col.value },
+                  }}
+                >
+                  {col.label}
+                  {col.value === searchParams.orderBy && (
+                    <ArrowUpIcon className="inline" />
+                  )}
+                </NextLink>
               </Table.ColumnHeaderCell>
             ))}
           </Table.Row>
@@ -89,10 +99,10 @@ const Issues = async ({ searchParams }: Props) => {
                 width={"10rem"}
                 className="hidden md:table-cell w-fit"
               >
-                {issue.createdAt.toDateString()}
+                {issue.createdAt.toUTCString()}
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell" width={"10rem"}>
-                {issue.updatedAt.toDateString()}
+                {issue.updatedAt.toUTCString()}
               </Table.Cell>
             </Table.Row>
           ))}
