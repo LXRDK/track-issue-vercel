@@ -15,6 +15,9 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { Skeleton } from "@/app/components";
+interface Props {
+  searchParams: object;
+}
 const NavBar = () => {
   return (
     <nav className="border-b mb-5 px-5 py-3 ">
@@ -44,6 +47,7 @@ const AuthStaus = () => {
         Log in
       </Link>
     );
+
   return (
     <Box>
       <DropdownMenu.Root>
@@ -86,7 +90,8 @@ const NavLinks = () => {
               href={link.href}
               className={classNames({
                 "nav-link": true,
-                "!text-zinc-800 ": link.href === currentPath,
+                "!text-zinc-800 underline underline-offset-2 decoration-red-600 font-bold ":
+                  link.href === currentPath,
               })}
             >
               {link.label}
@@ -101,8 +106,13 @@ export default NavBar;
 
 const FallBackUi = () => {
   return (
-    <Link href="/api/auth/signin" color="ruby">
-      <Button color="ruby">Sign in again</Button>
+    <Link href="/api/auth/signout" className="cursor-pointer" color="ruby">
+      <Button
+        color="ruby"
+        className="whitespace-nowrap  cursor-pointer hover:bg-black duration-300 ease-in-out"
+      >
+        Sign in again
+      </Button>
     </Link>
   );
 };

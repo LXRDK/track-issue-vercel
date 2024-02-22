@@ -8,6 +8,7 @@ import NextLink from "next/link";
 import { Issue, Status } from "@prisma/client";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { unknown } from "zod";
+import SortingTablIcon from "../components/SortingTablIcon";
 
 interface Props {
   searchParams: { status: Status; orderBy: keyof Issue };
@@ -69,9 +70,7 @@ const Issues = async ({ searchParams }: Props) => {
                   }}
                 >
                   {col.label}
-                  {col.value === searchParams.orderBy && (
-                    <ArrowUpIcon className="inline animate-bounce ease-in-out" />
-                  )}
+                  {col.value === searchParams.orderBy && <SortingTablIcon />}
                 </NextLink>
               </Table.ColumnHeaderCell>
             ))}
