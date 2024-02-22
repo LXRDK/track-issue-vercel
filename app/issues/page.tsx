@@ -7,6 +7,7 @@ import IssueActions from "./IssueActions";
 import NextLink from "next/link";
 import { Issue, Status } from "@prisma/client";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
+import { unknown } from "zod";
 
 interface Props {
   searchParams: { status: Status; orderBy: keyof Issue };
@@ -40,10 +41,14 @@ const Issues = async ({ searchParams }: Props) => {
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;
+  const orderBy = columns.map((col) => col.value).includes(searchParams.orderBy)
+    ? { [searchParams.orderBy]: "asc" }
+    : undefined;
   const issues = await prisma.issue.findMany({
     where: {
       status,
     },
+    orderBy,
   });
 
   return (
@@ -65,7 +70,7 @@ const Issues = async ({ searchParams }: Props) => {
                 >
                   {col.label}
                   {col.value === searchParams.orderBy && (
-                    <ArrowUpIcon className="inline" />
+                    <ArrowUpIcon className="inline animate-bounce ease-in-out" />
                   )}
                 </NextLink>
               </Table.ColumnHeaderCell>
