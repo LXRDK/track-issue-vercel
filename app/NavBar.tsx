@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { AiFillBug } from "react-icons/ai";
 import classNames from "classnames";
@@ -36,6 +36,8 @@ const NavBar = () => {
   );
 };
 const AuthStaus = () => {
+  const currentPath = usePathname();
+
   const { status, data: session } = useSession();
   if (status === "loading")
     return (
@@ -43,7 +45,7 @@ const AuthStaus = () => {
     );
   if (status === "unauthenticated")
     return (
-      <Link href="/api/auth/signin" className="nav-link">
+      <Link href={`/api/auth/signin`} className="nav-link">
         Log in
       </Link>
     );
@@ -66,7 +68,7 @@ const AuthStaus = () => {
             <Text size={"2"}>{session!.user!.email}</Text>
           </DropdownMenu.Label>
           <DropdownMenu.Item>
-            <Link href="/api/auth/signout" className="w-full">
+            <Link href={`/api/auth/signout`} className="w-full">
               Log out
             </Link>
           </DropdownMenu.Item>
@@ -90,7 +92,7 @@ const NavLinks = () => {
               href={link.href}
               className={classNames({
                 "nav-link": true,
-                "!text-zinc-800 underline underline-offset-2 decoration-red-600 font-bold ":
+                "!text-zinc-800 underline underline-offset-2 decoration-red-600 font-bold decoration-4 ":
                   link.href === currentPath,
               })}
             >
