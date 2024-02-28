@@ -1,5 +1,6 @@
 import { Status } from "@prisma/client";
 import { Card, Flex, Text } from "@radix-ui/themes";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
@@ -40,3 +41,7 @@ const IssueSummary = ({ open, inProgress, closed }: Props) => {
 };
 
 export default IssueSummary;
+export const metadata: Metadata = {
+  title:"issue tracker Dashboard",
+  description:"better description"
+};
